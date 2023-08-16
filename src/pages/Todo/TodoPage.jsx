@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { deleteTodo, getTodo, postTodo, putTodo } from "../../api/todoApi";
+import Input from "../../components/Input";
+import styled from "styled-components";
+import { StyledButton } from "../../components/Button";
+import Title from "../../components/Title";
+import TodoInput from "../../components/TodoInput";
 
 export default function TodoPage() {
   const [todos, setTodos] = useState([]);
@@ -39,8 +44,9 @@ export default function TodoPage() {
     await fetchData();
   };
 
-  const handleClickEditTodo = (todoId) => {
+  const handleClickEditTodo = (todoId, todo, isChecked) => {
     setEditTodoId(todoId);
+    setEditTodo({ todo: todo, isCompleted: isChecked });
   };
 
   const handleClickDeleteTodo = async (todoId) => {
@@ -85,23 +91,22 @@ export default function TodoPage() {
   }, []);
 
   return (
-    <>
-      <form onSubmit={handleSubmitTodo}>
-        <input
+    <Container>
+      <Title>오늘의 할일 추가하기</Title>
+      <TodoInputForm onSubmit={handleSubmitTodo}>
+        <TodoInput
           type="text"
-          data-testid="new-todo-input"
+          id="new-todo-input"
           value={newTodo}
           onChange={handleChangeTodo}
         />
-        <button data-testid="new-todo-add-button">추가</button>
-      </form>
+        <TodoAddButton id="new-todo-add-button">추가</TodoAddButton>
+      </TodoInputForm>
 
-      <br />
-
-      <ul>
+      <TodoList>
         {todos.map((todo) => (
-          <li key={todo.id}>
-            <label>
+          <TodoItem key={todo.id}>
+            <TodoLabel isEdit={editTodoId === todo.id}>
               <input
                 type="checkbox"
                 id={todo.id}
@@ -110,45 +115,91 @@ export default function TodoPage() {
                 onChange={handleChangeCheckBox}
               />
               <span>{todo.todo}</span>
-              <button
+              <TodoButton
                 type="button"
-                data-testid="modify-button"
+                id="modify-button"
                 onClick={() => {
-                  handleClickEditTodo(todo.id);
+                  handleClickEditTodo(todo.id, todo.todo, todo.isChecked);
                 }}
               >
                 수정
-              </button>
-              <button
+              </TodoButton>
+              <TodoButton
                 type="button"
-                data-testid="delete-button"
+                id="delete-button"
                 onClick={() => handleClickDeleteTodo(todo.id)}
               >
                 삭제
-              </button>
-            </label>
+              </TodoButton>
+            </TodoLabel>
 
             {editTodoId === todo.id && (
-              <form onSubmit={handleSubmitEditTodo}>
-                <input
-                  data-testid="modify-input"
+              <EditForm onSubmit={handleSubmitEditTodo}>
+                <TodoInput
+                  id="modify-input"
+                  value={editTodo.todo}
                   onChange={(e) =>
                     handleChangeEditTodo(e.target.value, todo.isCompleted)
                   }
                 />
-                <button data-testid="submit-button">제출</button>
-                <button
+                <TodoButton id="submit-button">제출</TodoButton>
+                <TodoButton
                   type="button"
-                  data-testid="cancel-button"
+                  id="cancel-button"
                   onClick={handleClickCancleEdit}
                 >
                   취소
-                </button>
-              </form>
+                </TodoButton>
+              </EditForm>
             )}
-          </li>
+          </TodoItem>
         ))}
-      </ul>
-    </>
+      </TodoList>
+    </Container>
   );
 }
+
+const Container = styled.div`
+  margin: 0 auto;
+`;
+
+const TodoInputForm = styled.form`
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+`;
+
+const TodoLabel = styled.label`
+  opacity: ${(p) => (p.isEdit ? 0 : 1)};
+`;
+
+const TodoAddButton = styled(StyledButton)`
+  width: 80px;
+  font-size: 14px;
+  border-radius: 10px;
+`;
+
+const TodoButton = styled(StyledButton)`
+  width: 48px;
+  padding: 10px;
+  font-size: 12px;
+  border-radius: 10px;
+  margin: 0 5px;
+`;
+
+const TodoList = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 24px;
+`;
+
+const TodoItem = styled.li`
+  display: flex;
+  justify-content: center;
+`;
+
+const EditForm = styled.form`
+  position: absolute;
+  background-color: var(--black);
+`;

@@ -10,6 +10,9 @@ const GlobalStyle = createGlobalStyle`
 	:root{
 		--black: #1F2125;
 		--white: #fff;
+		--gray500: #3D3F46;
+		--blue: #3366FF;
+		--warning: #F15846;
 		font-size: 16px;
 	
 	}
