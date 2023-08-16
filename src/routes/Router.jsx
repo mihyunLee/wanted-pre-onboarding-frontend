@@ -12,6 +12,7 @@ export default function AppRouter() {
       <Routes>
         {/* Public */}
         <Route element={<PublicRoutePage />}>
+          <Route path="/" element={<SignInPage />} />
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/signup" element={<SignUpPage />} />
         </Route>
