@@ -19,7 +19,7 @@ export default function SignInPage() {
     if (!emailError && !passwordError) {
       try {
         await postSignin({ email: email, password: password }).then((res) => {
-          localStorage.setItem("token", JSON.stringify(res.access_token));
+          localStorage.setItem("token", res.access_token);
           navigate("/todo", { replace: false });
         });
       } catch {
