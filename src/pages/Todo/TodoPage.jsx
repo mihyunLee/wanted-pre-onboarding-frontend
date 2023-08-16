@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { deleteTodo, getTodo, postTodo, putTodo } from "../../api/todoApi";
-import Input from "../../components/Input";
 import styled from "styled-components";
 import { StyledButton } from "../../components/Button";
 import Title from "../../components/Title";
