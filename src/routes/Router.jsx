@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import PublicRoutePage from "../pages/AuthenticatedPage/PublicRoutePage";
 import PrivateRoutePage from "../pages/AuthenticatedPage/PrivateRoutePage";
 import SignInPage from "../pages/Auth/SignInPage";
@@ -12,7 +12,7 @@ export default function AppRouter() {
       <Routes>
         {/* Public */}
         <Route element={<PublicRoutePage />}>
-          <Route path="/" element={<SignInPage />} />
+          <Route path="/" element={<Navigate to="/signup" />} />
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/signup" element={<SignUpPage />} />
         </Route>
