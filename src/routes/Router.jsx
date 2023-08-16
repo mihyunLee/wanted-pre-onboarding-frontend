@@ -4,6 +4,7 @@ import PrivateRoutePage from "../pages/AuthenticatedPage/PrivateRoutePage";
 import SignInPage from "../pages/Auth/SignInPage";
 import SignUpPage from "../pages/Auth/SignUpPage";
 import TodoPage from "../pages/Todo/TodoPage";
+import NotFoundPage from "../pages/NotFoundPage";
 
 export default function AppRouter() {
   return (
@@ -19,6 +20,8 @@ export default function AppRouter() {
         <Route element={<PrivateRoutePage />}>
           <Route path="/todo" element={<TodoPage />} />
         </Route>
+
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );
