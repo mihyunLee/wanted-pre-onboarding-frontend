@@ -1,29 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
 import { postSignup } from "../../api/signupApi";
 import { useNavigate } from "react-router-dom";
+import useUserValidation from "../../hooks/useUserValidation";
 
 export default function SignInPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, emailError, handleChangeEmail] = useUserValidation("", "email");
+  const [password, passwordError, handleChangePassword] = useUserValidation(
+    "",
+    "password"
+  );
 
   const navigate = useNavigate();
-
-  const handleChangeEmail = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handleChangePassword = (e) => {
-    setPassword(e.target.value);
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      await postSignup({ email: email, password: password });
-      navigate("/signin");
-    } catch (error) {
-      console.log(error);
+    if (!emailError && !passwordError) {
+      try {
+        await postSignup({ email: email, password: password });
+        navigate("/signin");
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -37,6 +35,7 @@ export default function SignInPage() {
         value={email}
         onChange={handleChangeEmail}
       />
+      <span>{emailError}</span>
       <label htmlFor="user-pw">비밀번호</label>
       <input
         id="user-pw"
@@ -45,7 +44,13 @@ export default function SignInPage() {
         value={password}
         onChange={handleChangePassword}
       />
-      <button data-testid="signup-button">회원가입</button>
+      <span>{passwordError}</span>
+      <button
+        data-testid="signup-button"
+        disabled={emailError || passwordError}
+      >
+        회원가입
+      </button>
     </form>
   );
 }

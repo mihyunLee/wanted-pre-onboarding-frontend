@@ -1,31 +1,30 @@
 import React, { useState } from "react";
 import { postSignin } from "../../api/signinApi";
 import { useNavigate } from "react-router-dom";
+import useUserValidation from "../../hooks/useUserValidation";
 
 export default function SignInPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, emailError, handleChangeEmail] = useUserValidation("", "email");
+  const [password, passwordError, handleChangePassword] = useUserValidation(
+    "",
+    "password"
+  );
+  const [userError, setUserError] = useState("");
 
   const navigate = useNavigate();
-
-  const handleChangeEmail = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handleChangePassword = (e) => {
-    setPassword(e.target.value);
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      await postSignin({ email: email, password: password }).then((res) => {
-        localStorage.setItem("token", JSON.stringify(res.access_token));
-        navigate("/todo", { replace: false });
-      });
-    } catch (error) {
-      console.log(error);
+    if (!emailError && !passwordError) {
+      try {
+        await postSignin({ email: email, password: password }).then((res) => {
+          localStorage.setItem("token", JSON.stringify(res.access_token));
+          navigate("/todo", { replace: false });
+        });
+      } catch {
+        setUserError("이메일 또는 비밀번호가 올바르지 않습니다.");
+      }
     }
   };
 
@@ -39,6 +38,7 @@ export default function SignInPage() {
         value={email}
         onChange={handleChangeEmail}
       />
+      <span>{emailError}</span>
       <label htmlFor="user-pw">비밀번호</label>
       <input
         id="user-pw"
@@ -47,7 +47,14 @@ export default function SignInPage() {
         value={password}
         onChange={handleChangePassword}
       />
-      <button data-testid="signin-button">로그인</button>
+      <span>{passwordError}</span>
+      <span>{userError}</span>
+      <button
+        data-testid="signin-button"
+        disabled={emailError || passwordError}
+      >
+        로그인
+      </button>
     </form>
   );
 }
