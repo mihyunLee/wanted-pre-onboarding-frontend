@@ -31,12 +31,18 @@ export default function SignInPage() {
 
   return (
     <form onSubmit={handleSubmit}>
+      <label htmlFor="user-email">이메일</label>
       <input
+        id="user-email"
+        type="email"
         data-testid="email-input"
         value={email}
         onChange={handleChangeEmail}
       />
+      <label htmlFor="user-pw">비밀번호</label>
       <input
+        id="user-pw"
+        type="password"
         data-testid="password-input"
         value={password}
         onChange={handleChangePassword}
